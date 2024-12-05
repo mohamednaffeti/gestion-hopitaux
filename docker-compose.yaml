@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  eureka-service:
+    image: eureka-service
+    container_name: eureka-service
+    ports:
+      - "8761:8761"
+    environment:
+      - spring.application.name=eureka-service
+      - eureka.client.register-with-eureka=false
+      - eureka.client.fetch-registry=false
+    networks:
+      - app-network
+
+  gateway-service:
+    image: gateway-service
+    container_name: gateway-service
+    ports:
+      - "8888:8888"
+    environment:
+      - spring.application.name=gateway-service
+      - spring.cloud.discovery.enabled=true
+      - eureka.client.service-url.defaultZone=http://eureka-service:8761/eureka
+    depends_on:
+      - eureka-service
+    networks:
+      - app-network
+
+  user-service:
+    image: user-service
+    container_name: user-service
+    ports:
+      - "1111:1111"
+      - "8880:8880"  # Adjust if necessary
+    environment:
+      - spring.application.name=user-service
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/users_db
+      - spring.datasource.username=postgresuser
+      - spring.datasource.password=postgrespassword
+      - spring.datasource.driver-class-name=org.postgresql.Driver  # Ajouté si nécessaire
+    depends_on:
+      - eureka-service
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    ports:
+      - "2345:5432"
+    environment:
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=users_db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Eureka-Service" />
+        <module name="Gateway-Service" />
         <module name="Config-Service" />
         <module name="Patient-Service" />
         <module name="User-Service" />
@@ -17,6 +18,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Config-Service" options="-parameters" />
       <module name="Eureka-Service" options="-parameters" />
+      <module name="Gateway-Service" options="-parameters" />
       <module name="Patient-Service" options="-parameters" />
       <module name="User-Service" options="-parameters" />
     </option>
